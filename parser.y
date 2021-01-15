@@ -582,6 +582,7 @@ import (
 	view                  "VIEW"
 	visible               "VISIBLE"
 	warnings              "WARNINGS"
+	wasmBytecode          "WASM_BYTECODE"
 	week                  "WEEK"
 	weightString          "WEIGHT_STRING"
 	without               "WITHOUT"
@@ -777,7 +778,8 @@ import (
 	BRIEStmt               "BACKUP or RESTORE statement"
 	CommitStmt             "COMMIT statement"
 	CreateTableStmt        "CREATE TABLE statement"
-	CreateViewStmt         "CREATE VIEW  stetement"
+	CreateViewStmt         "CREATE VIEW stetement"
+	CreateFunctionStmt     "CREATE FUNCTION stetement"
 	CreateUserStmt         "CREATE User statement"
 	CreateRoleStmt         "CREATE Role statement"
 	CreateDatabaseStmt     "Create Database Statement"
@@ -786,6 +788,7 @@ import (
 	CreateSequenceStmt     "CREATE SEQUENCE statement"
 	DoStmt                 "Do statement"
 	DropDatabaseStmt       "DROP DATABASE statement"
+	DropFunctionStmt       "DROP FUNCTION statement"
 	DropIndexStmt          "DROP INDEX statement"
 	DropStatsStmt          "DROP STATS statement"
 	DropTableStmt          "DROP TABLE statement"
@@ -906,6 +909,7 @@ import (
 	MaxValueOrExpressionList               "maxvalue or expression list"
 	ExpressionListOpt                      "expression list opt"
 	FetchFirstOpt                          "Fetch First/Next Option"
+	FunctionName                           "Function name"
 	FuncDatetimePrecListOpt                "Function datetime precision list opt"
 	FuncDatetimePrecList                   "Function datetime precision list"
 	Field                                  "field expression"
@@ -3647,6 +3651,34 @@ LikeTableWithOrWithoutParen:
 		$$ = $3
 	}
 
+FunctionName:
+	Identifier
+	{
+		$$ = &ast.FunctionName{Name: model.NewCIStr($1)}
+	}
+|	Identifier '.' Identifier
+	{
+		$$ = &ast.FunctionName{Schema: model.NewCIStr($1), Name: model.NewCIStr($3)}
+	}
+
+CreateFunctionStmt:
+	"CREATE" "FUNCTION" FunctionName "WASM_BYTECODE" hexLit
+	{
+		$$ = &ast.CreateFunctionStmt{
+			Name: $3.(*ast.FunctionName),
+			Body: []byte($5.(ast.BinaryLiteral).ToString()),
+		}
+	}
+
+DropFunctionStmt:
+	"DROP" "FUNCTION" IfExists FunctionName
+	{
+		$$ = &ast.DropFunctionStmt{
+			IfExists: $3.(bool),
+			Name:     $4.(*ast.FunctionName),
+		}
+	}
+
 /*******************************************************************
  *
  *  Create View Statement
@@ -5267,6 +5299,7 @@ UnReservedKeyword:
 |	"CSV_SEPARATOR"
 |	"ON_DUPLICATE"
 |	"TIKV_IMPORTER"
+|	"WASM_BYTECODE"
 
 TiDBKeyword:
 	"ADMIN"
@@ -9362,12 +9395,14 @@ Statement:
 |	CreateIndexStmt
 |	CreateTableStmt
 |	CreateViewStmt
+|	CreateFunctionStmt
 |	CreateUserStmt
 |	CreateRoleStmt
 |	CreateBindingStmt
 |	CreateSequenceStmt
 |	DoStmt
 |	DropDatabaseStmt
+|	DropFunctionStmt
 |	DropIndexStmt
 |	DropTableStmt
 |	DropSequenceStmt

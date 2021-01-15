@@ -724,6 +724,7 @@ var tokenMap = map[string]int{
 	"X509":                     x509,
 	"XOR":                      xor,
 	"YEAR_MONTH":               yearMonth,
+	"WASM_BYTECODE":            wasmBytecode,
 	"YEAR":                     yearType,
 	"ZEROFILL":                 zerofill,
 }

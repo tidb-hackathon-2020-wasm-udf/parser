@@ -14,6 +14,8 @@
 package ast
 
 import (
+	"encoding/hex"
+
 	"github.com/pingcap/errors"
 	"github.com/pingcap/parser/auth"
 	"github.com/pingcap/parser/format"
@@ -889,6 +891,58 @@ func (n *ColumnDef) Validate() bool {
 		illegalOpt4gc = illegalOpt4gc || found
 	}
 	return !(generatedCol && illegalOpt4gc)
+}
+
+type CreateFunctionStmt struct {
+	stmtNode
+
+	Name *FunctionName
+	Body []byte
+}
+
+// Accept implements Node Accept interface.
+func (n *CreateFunctionStmt) Accept(v Visitor) (Node, bool) {
+	newNode, skipChildren := v.Enter(n)
+	if skipChildren {
+		return v.Leave(newNode)
+	}
+	return v.Leave(n)
+}
+
+// Restore implements Node interface.
+func (n *CreateFunctionStmt) Restore(ctx *format.RestoreCtx) error {
+	ctx.WriteKeyWord("CREATE FUNCTION ")
+	n.Name.Restore(ctx)
+	ctx.WriteKeyWord(" WASM_BYTECODE ")
+	ctx.WritePlain("x'")
+	ctx.WritePlain(hex.EncodeToString(n.Body))
+	ctx.WritePlain("'")
+
+	return nil
+}
+
+type DropFunctionStmt struct {
+	stmtNode
+
+	Name     *FunctionName
+	IfExists bool
+}
+
+// Accept implements Node Accept interface.
+func (n *DropFunctionStmt) Accept(v Visitor) (Node, bool) {
+	newNode, skipChildren := v.Enter(n)
+	if skipChildren {
+		return v.Leave(newNode)
+	}
+	return v.Leave(n)
+}
+
+// Restore implements Node interface.
+func (n *DropFunctionStmt) Restore(ctx *format.RestoreCtx) error {
+	ctx.WriteKeyWord("DROP FUNCTION ")
+	n.Name.Restore(ctx)
+
+	return nil
 }
 
 // CreateTableStmt is a statement to create a table.

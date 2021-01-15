@@ -171,6 +171,24 @@ func (n *Join) Accept(v Visitor) (Node, bool) {
 	return v.Leave(n)
 }
 
+type FunctionName struct {
+	node
+	Schema model.CIStr
+	Name   model.CIStr
+}
+
+func (n *FunctionName) Restore(ctx *format.RestoreCtx) error {
+	if n.Schema.String() != "" {
+		ctx.WriteName(n.Schema.String())
+		ctx.WritePlain(".")
+	} else if ctx.DefaultDB != "" {
+		ctx.WriteName(ctx.DefaultDB)
+		ctx.WritePlain(".")
+	}
+	ctx.WriteName(n.Name.String())
+	return nil
+}
+
 // TableName represents a table name.
 type TableName struct {
 	node

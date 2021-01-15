@@ -3580,6 +3580,13 @@ func (s *testParserSuite) TestType(c *C) {
 
 func (s *testParserSuite) TestPrivilege(c *C) {
 	table := []testCase{
+		{"CREATE FUNCTION foo", false, ""},
+		{"DROP FUNCTION foo", true, "DROP FUNCTION `foo`"},
+		{"CREATE FUNCTION foo WASM_BYTECODE x'FF'", true, "CREATE FUNCTION `foo` WASM_BYTECODE x'ff'"},
+		{"CREATE FUNCTION foo WASM_BYTECODE x'FFAA00aabbccdd113344'", true, "CREATE FUNCTION `foo` WASM_BYTECODE x'ffaa00aabbccdd113344'"},
+		{"CREATE FUNCTION `bar` WASM_BYTECODE x''", true, "CREATE FUNCTION `bar` WASM_BYTECODE x''"},
+		{"CREATE FUNCTION test.abc WASM_BYTECODE x'aabb'", true, "CREATE FUNCTION `test`.`abc` WASM_BYTECODE x'aabb'"},
+		{"CREATE FUNCTION test WASM_BYTECODE x'aab'", false, ""},
 		// for create user
 		{`CREATE USER 'ttt' REQUIRE X509;`, true, "CREATE USER `ttt`@`%` REQUIRE X509"},
 		{`CREATE USER 'ttt' REQUIRE SSL;`, true, "CREATE USER `ttt`@`%` REQUIRE SSL"},
