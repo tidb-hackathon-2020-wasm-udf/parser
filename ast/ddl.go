@@ -906,6 +906,13 @@ func (n *CreateFunctionStmt) Accept(v Visitor) (Node, bool) {
 	if skipChildren {
 		return v.Leave(newNode)
 	}
+	{
+		node, ok := n.Name.Accept(v)
+		if !ok {
+			return n, false
+		}
+		n.Name = node.(*FunctionName)
+	}
 	return v.Leave(n)
 }
 
@@ -933,6 +940,13 @@ func (n *DropFunctionStmt) Accept(v Visitor) (Node, bool) {
 	newNode, skipChildren := v.Enter(n)
 	if skipChildren {
 		return v.Leave(newNode)
+	}
+	{
+		node, ok := n.Name.Accept(v)
+		if !ok {
+			return n, false
+		}
+		n.Name = node.(*FunctionName)
 	}
 	return v.Leave(n)
 }

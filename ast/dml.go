@@ -177,6 +177,15 @@ type FunctionName struct {
 	Name   model.CIStr
 }
 
+func (n *FunctionName) Accept(v Visitor) (Node, bool) {
+	newNode, skipChildren := v.Enter(n)
+	if skipChildren {
+		return v.Leave(newNode)
+	}
+	n = newNode.(*FunctionName)
+	return v.Leave(n)
+}
+
 func (n *FunctionName) Restore(ctx *format.RestoreCtx) error {
 	if n.Schema.String() != "" {
 		ctx.WriteName(n.Schema.String())
