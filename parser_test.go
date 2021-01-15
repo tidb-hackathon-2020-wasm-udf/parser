@@ -3587,6 +3587,7 @@ func (s *testParserSuite) TestPrivilege(c *C) {
 		{"CREATE FUNCTION `bar` WASM_BYTECODE x''", true, "CREATE FUNCTION `bar` WASM_BYTECODE x''"},
 		{"CREATE FUNCTION test.abc WASM_BYTECODE x'aabb'", true, "CREATE FUNCTION `test`.`abc` WASM_BYTECODE x'aabb'"},
 		{"CREATE FUNCTION test WASM_BYTECODE x'aab'", false, ""},
+		{"FLUSH functions", true, "FLUSH FUNCTIONS"},
 		// for create user
 		{`CREATE USER 'ttt' REQUIRE X509;`, true, "CREATE USER `ttt`@`%` REQUIRE X509"},
 		{`CREATE USER 'ttt' REQUIRE SSL;`, true, "CREATE USER `ttt`@`%` REQUIRE SSL"},

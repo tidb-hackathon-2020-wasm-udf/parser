@@ -657,6 +657,25 @@ const (
 	LogTypeSlow
 )
 
+type FlushFunctionsStmt struct {
+	stmtNode
+}
+
+func (n *FlushFunctionsStmt) Accept(v Visitor) (Node, bool) {
+	newNode, skipChildren := v.Enter(n)
+	if skipChildren {
+		return v.Leave(newNode)
+	}
+	n = newNode.(*FlushFunctionsStmt)
+	return v.Leave(n)
+}
+
+// Restore implements Node interface.
+func (n *FlushFunctionsStmt) Restore(ctx *format.RestoreCtx) error {
+	ctx.WriteKeyWord("FLUSH FUNCTIONS")
+	return nil
+}
+
 // FlushStmt is a statement to flush tables/privileges/optimizer costs and so on.
 type FlushStmt struct {
 	stmtNode

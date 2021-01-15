@@ -475,6 +475,7 @@ import (
 	preceding             "PRECEDING"
 	prepare               "PREPARE"
 	privileges            "PRIVILEGES"
+	functions             "FUNCTIONS"
 	process               "PROCESS"
 	processlist           "PROCESSLIST"
 	profile               "PROFILE"
@@ -5136,6 +5137,7 @@ UnReservedKeyword:
 |	"ENABLE"
 |	"REVERSE"
 |	"PRIVILEGES"
+|	"FUNCTIONS"
 |	"NO"
 |	"BINLOG"
 |	"FUNCTION"
@@ -9256,7 +9258,11 @@ ShowTableAliasOpt:
 	}
 
 FlushStmt:
-	"FLUSH" NoWriteToBinLogAliasOpt FlushOption
+	"FLUSH" "FUNCTIONS"
+	{
+		$$ = &ast.FlushFunctionsStmt{}
+	}
+|	"FLUSH" NoWriteToBinLogAliasOpt FlushOption
 	{
 		tmp := $3.(*ast.FlushStmt)
 		tmp.NoWriteToBinLog = $2.(bool)

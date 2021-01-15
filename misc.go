@@ -503,6 +503,7 @@ var tokenMap = map[string]int{
 	"PREPARE":                  prepare,
 	"PRIMARY":                  primary,
 	"PRIVILEGES":               privileges,
+	"FUNCTIONS":                functions,
 	"PROCEDURE":                procedure,
 	"PROCESS":                  process,
 	"PROCESSLIST":              processlist,
