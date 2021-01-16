@@ -251,6 +251,8 @@ const (
 	// ConfigPriv is the privilege to enable the use SET CONFIG statements.
 	ConfigPriv
 
+	UDFNetworkPriv
+
 	// AllPriv is the privilege for all actions.
 	AllPriv
 )
@@ -326,6 +328,7 @@ var Priv2UserCol = map[PrivilegeType]string{
 	ReloadPriv:         "Reload_priv",
 	FilePriv:           "File_priv",
 	ConfigPriv:         "Config_priv",
+	UDFNetworkPriv:     "UDF_network_priv",
 }
 
 // Col2PrivType is the privilege tables column name to privilege type.
@@ -428,6 +431,7 @@ var Priv2Str = map[PrivilegeType]string{
 	ReloadPriv:         "RELOAD",
 	FilePriv:           "FILE",
 	ConfigPriv:         "CONFIG",
+	UDFNetworkPriv:     "UDF NETWORK",
 }
 
 // Priv2SetStr is the map for privilege to string.
@@ -466,7 +470,7 @@ var SetStr2Priv = map[string]PrivilegeType{
 }
 
 // AllGlobalPrivs is all the privileges in global scope.
-var AllGlobalPrivs = []PrivilegeType{SelectPriv, InsertPriv, UpdatePriv, DeletePriv, CreatePriv, DropPriv, ProcessPriv, ReferencesPriv, AlterPriv, ShowDBPriv, SuperPriv, ExecutePriv, IndexPriv, CreateUserPriv, TriggerPriv, CreateViewPriv, ShowViewPriv, CreateRolePriv, DropRolePriv, CreateTMPTablePriv, LockTablesPriv, CreateRoutinePriv, AlterRoutinePriv, EventPriv, ShutdownPriv, ReloadPriv, FilePriv, ConfigPriv}
+var AllGlobalPrivs = []PrivilegeType{SelectPriv, InsertPriv, UpdatePriv, DeletePriv, CreatePriv, DropPriv, ProcessPriv, ReferencesPriv, AlterPriv, ShowDBPriv, SuperPriv, ExecutePriv, IndexPriv, CreateUserPriv, TriggerPriv, CreateViewPriv, ShowViewPriv, CreateRolePriv, DropRolePriv, CreateTMPTablePriv, LockTablesPriv, CreateRoutinePriv, AlterRoutinePriv, EventPriv, ShutdownPriv, ReloadPriv, FilePriv, ConfigPriv, UDFNetworkPriv}
 
 // AllDBPrivs is all the privileges in database scope.
 var AllDBPrivs = []PrivilegeType{SelectPriv, InsertPriv, UpdatePriv, DeletePriv, CreatePriv, DropPriv, AlterPriv, ExecutePriv, IndexPriv, CreateViewPriv, ShowViewPriv}
