@@ -111,6 +111,7 @@ const (
 	Sqrt     = "sqrt"
 	Tan      = "tan"
 	Truncate = "truncate"
+	NBODY    = "nbody"
 
 	// time functions
 	AddDate          = "adddate"
