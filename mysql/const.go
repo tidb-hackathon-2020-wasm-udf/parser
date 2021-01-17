@@ -362,6 +362,7 @@ var Col2PrivType = map[string]PrivilegeType{
 	"Reload_priv":           ReloadPriv,
 	"File_priv":             FilePriv,
 	"Config_priv":           ConfigPriv,
+	"UDF_network_priv":      UDFNetworkPriv,
 }
 
 // Command2Str is the command information to command name.
